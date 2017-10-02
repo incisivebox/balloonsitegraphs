@@ -6,22 +6,41 @@
       google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Year', 'Sales', 'Expenses'],
-          ['2004',  1000,      400],
-          ['2005',  1170,      460],
-          ['2006',  660,       1120],
-          ['2007',  1030,      540]
-        ]);
+        function drawChart() {
+        var query = new google.visualization.Query(URL);
+        query.send(handleQueryResponse);
+      }
 
+      function handleQueryResponse(response) {
+        var data = response.getDataTable();
+        var chart = new google.visualization.ColumnChart(document.getElementById('columnchart'));
+        chart.draw(data, null);
+   }
         var options = {
           title: 'Company Performance',
           curveType: 'function',
           legend: { position: 'bottom' }
         };
+        
+       function drawSheetName() {
+     // var queryString = encodeURIComponent('SELECT A, H, O, Q, R, U LIMIT 5 OFFSET 8');
 
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+      var query = new google.visualization.Query(
+          'https://docs.google.com/spreadsheets/d/1Q3_6hbvY_4TwuicqlufLhNNKd3o8o1N26pAr98g2Iik/edit#gid=0' + queryString);
+      query.send(handleSampleDataQueryResponse);
+    }
 
+    function handleSampleDataQueryResponse(response) {
+      if (response.isError()) {
+        alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+        return;
+      }
+
+      var data = response.getDataTable();
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chart.draw(data, { height: 400 });
+    }
+        
         chart.draw(data, options);
       }
     </script>
